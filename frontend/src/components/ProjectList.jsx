@@ -1,7 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Calendar, Trash2, User, AlertCircle, Briefcase } from 'lucide-react';
+import ConfirmModal from './ConfirmModal';
 
 const ProjectList = ({ user, token, projects, tasks, onStatusUpdated, onTaskDeleted, onDeleteProject }) => {
+
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    type: '', // 'task' | 'project'
+    id: null,
+    title: '',
+    message: ''
+  });
 
   const isOverdue = (task) => {
     return new Date(task.dueDate) < new Date() && task.status !== 'Done';
@@ -48,43 +57,64 @@ const ProjectList = ({ user, token, projects, tasks, onStatusUpdated, onTaskDele
     }
   };
 
-  const handleDeleteTask = async (taskId) => {
-    if (!window.confirm('Are you sure you want to delete this task?')) return;
-    try {
-      const res = await fetch(`/api/tasks/${taskId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      if (res.ok) {
-        onTaskDeleted(taskId);
-      } else {
-        const err = await res.json();
-        alert(err.message || 'Failed to delete task');
-      }
-    } catch (error) {
-      console.error('Error deleting task:', error);
-    }
+  const triggerDeleteTask = (taskId) => {
+    setConfirmModal({
+      isOpen: true,
+      type: 'task',
+      id: taskId,
+      title: 'Are you sure about that?',
+      message: 'Do you want to delete this task?'
+    });
   };
 
-  const handleDeleteProject = async (projectId) => {
-    if (!window.confirm('Are you sure you want to delete this project? This will also cascade delete all its tasks.')) return;
-    try {
-      const res = await fetch(`/api/projects/${projectId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
+  const triggerDeleteProject = (projectId) => {
+    setConfirmModal({
+      isOpen: true,
+      type: 'project',
+      id: projectId,
+      title: 'Are you sure about that?',
+      message: 'Do you want to delete this project? This will also cascade delete all its tasks.'
+    });
+  };
+
+  const executeDelete = async () => {
+    const { type, id } = confirmModal;
+    setConfirmModal(prev => ({ ...prev, isOpen: false }));
+
+    if (type === 'task') {
+      try {
+        const res = await fetch(`/api/tasks/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (res.ok) {
+          onTaskDeleted(id);
+        } else {
+          const err = await res.json();
+          alert(err.message || 'Failed to delete task');
         }
-      });
-      if (res.ok) {
-        onDeleteProject(projectId);
-      } else {
-        const err = await res.json();
-        alert(err.message || 'Failed to delete project');
+      } catch (error) {
+        console.error('Error deleting task:', error);
       }
-    } catch (error) {
-      console.error('Error deleting project:', error);
+    } else if (type === 'project') {
+      try {
+        const res = await fetch(`/api/projects/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (res.ok) {
+          onDeleteProject(id);
+        } else {
+          const err = await res.json();
+          alert(err.message || 'Failed to delete project');
+        }
+      } catch (error) {
+        console.error('Error deleting project:', error);
+      }
     }
   };
 
@@ -119,7 +149,7 @@ const ProjectList = ({ user, token, projects, tasks, onStatusUpdated, onTaskDele
                   </div>
                   {user.role === 'Admin' && (
                     <button
-                      onClick={() => handleDeleteProject(project._id)}
+                      onClick={() => triggerDeleteProject(project._id)}
                       className="rounded-lg p-1.5 text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-all"
                       title="Delete Project (Cascade)"
                     >
@@ -199,7 +229,7 @@ const ProjectList = ({ user, token, projects, tasks, onStatusUpdated, onTaskDele
 
                             {user.role === 'Admin' && (
                               <button
-                                onClick={() => handleDeleteTask(task._id)}
+                                onClick={() => triggerDeleteTask(task._id)}
                                 className="rounded-xl p-2 text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 border border-slate-900 hover:border-rose-500/25 transition-all"
                                 title="Delete Task"
                               >
@@ -219,6 +249,14 @@ const ProjectList = ({ user, token, projects, tasks, onStatusUpdated, onTaskDele
           );
         })
       )}
+      {/* Confirmation Modal overlay */}
+      <ConfirmModal 
+        isOpen={confirmModal.isOpen}
+        onClose={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+        onConfirm={executeDelete}
+        title={confirmModal.title}
+        message={confirmModal.message}
+      />
     </div>
   );
 };

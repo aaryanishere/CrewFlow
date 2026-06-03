@@ -11,6 +11,7 @@ import {
   Circle,
   FileText
 } from 'lucide-react';
+import ConfirmModal from './ConfirmModal';
 
 const ProjectDetailsView = ({ 
   projectId, 
@@ -25,6 +26,14 @@ const ProjectDetailsView = ({
   const { user } = useAuth();
   const effectiveUser = user || { email: 'guest@crewflow.com', role: 'Admin', _id: 'guest_id' };
   const activeProject = projects.find(p => p._id === projectId);
+
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    type: '', // 'task' | 'project'
+    id: null,
+    title: '',
+    message: ''
+  });
 
   if (!activeProject) {
     return (
@@ -82,51 +91,72 @@ const ProjectDetailsView = ({
     await handleStatusChange(taskId, nextStatus);
   };
 
-  const handleDeleteTask = async (taskId) => {
-    if (!window.confirm('Are you sure you want to delete this task?')) return;
-    if (!token) {
-      onTaskDeleted(taskId);
-      return;
-    }
-    try {
-      const res = await fetch(`/api/tasks/${taskId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      if (res.ok) {
-        onTaskDeleted(taskId);
-      } else {
-        const err = await res.json();
-        alert(err.message || 'Failed to delete task');
-      }
-    } catch (error) {
-      console.error('Error deleting task:', error);
-    }
+  const triggerDeleteTask = (taskId) => {
+    setConfirmModal({
+      isOpen: true,
+      type: 'task',
+      id: taskId,
+      title: 'Are you sure about that?',
+      message: 'Do you want to delete this task?'
+    });
   };
 
-  const handleDeleteProject = async () => {
-    if (!window.confirm('Are you sure you want to delete this project? This will permanently delete all associated tasks.')) return;
-    if (!token) {
-      onDeleteProject(activeProject._id);
-      return;
-    }
-    try {
-      const res = await fetch(`/api/projects/${activeProject._id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      if (res.ok) {
-        onDeleteProject(activeProject._id);
-      } else {
-        const err = await res.json();
-        alert(err.message || 'Failed to delete project');
+  const triggerDeleteProject = () => {
+    setConfirmModal({
+      isOpen: true,
+      type: 'project',
+      id: activeProject._id,
+      title: 'Are you sure about that?',
+      message: 'Do you want to delete this project? This will permanently delete all associated tasks.'
+    });
+  };
+
+  const executeDelete = async () => {
+    const { type, id } = confirmModal;
+    setConfirmModal(prev => ({ ...prev, isOpen: false }));
+
+    if (type === 'task') {
+      if (!token) {
+        onTaskDeleted(id);
+        return;
       }
-    } catch (error) {
-      console.error('Error deleting project:', error);
+      try {
+        const res = await fetch(`/api/tasks/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (res.ok) {
+          onTaskDeleted(id);
+        } else {
+          const err = await res.json();
+          alert(err.message || 'Failed to delete task');
+        }
+      } catch (error) {
+        console.error('Error deleting task:', error);
+      }
+    } else if (type === 'project') {
+      if (!token) {
+        onDeleteProject(id);
+        return;
+      }
+      try {
+        const res = await fetch(`/api/projects/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (res.ok) {
+          onDeleteProject(id);
+        } else {
+          const err = await res.json();
+          alert(err.message || 'Failed to delete project');
+        }
+      } catch (error) {
+        console.error('Error deleting project:', error);
+      }
     }
   };
 
@@ -154,7 +184,7 @@ const ProjectDetailsView = ({
 
         {effectiveUser.role === 'Admin' && (
           <button 
-            onClick={handleDeleteProject}
+            onClick={triggerDeleteProject}
             className="flex items-center justify-center gap-1.5 py-1.5 px-3 rounded border border-red-200 text-red-700 bg-red-50 hover:bg-red-100 transition-colors text-xs font-bold self-start md:self-center"
           >
             <Trash2 className="h-3.5 w-3.5" />
@@ -307,7 +337,7 @@ const ProjectDetailsView = ({
                       {effectiveUser.role === 'Admin' && (
                         <td className="mono-table-cell text-center">
                           <button
-                            onClick={() => handleDeleteTask(task._id)}
+                            onClick={() => triggerDeleteTask(task._id)}
                             className="p-1 hover:bg-red-50 border border-transparent hover:border-red-200 rounded text-[#8a8b8c] hover:text-red-700 transition-colors opacity-0 group-hover:opacity-100"
                             title="Delete Task"
                           >
@@ -326,6 +356,15 @@ const ProjectDetailsView = ({
         )}
 
       </div>
+
+      {/* Confirmation Modal overlay */}
+      <ConfirmModal 
+        isOpen={confirmModal.isOpen}
+        onClose={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+        onConfirm={executeDelete}
+        title={confirmModal.title}
+        message={confirmModal.message}
+      />
 
     </div>
   );
