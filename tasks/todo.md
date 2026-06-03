@@ -13,8 +13,8 @@
   - [x] Stage and commit changes to git, then push to GitHub repository
 
 ## Iteration 2: Header Refinement
-- [/] Refactor Customize and Clock styling:
-  - [ ] Transform **Customize** button into a small square icon-only button placed in the corner of the header banner
-  - [ ] Update **Clock** to be larger (`text-lg` / `text-xl`) with no background, border, or outline
-- [ ] Verify changes locally in browser
-- [ ] Commit and push updated files to GitHub
+- [x] Refactor Customize and Clock styling:
+  - [x] Transform **Customize** button into a small square icon-only button placed in the corner of the header banner
+  - [x] Update **Clock** to be larger (`text-lg` / `text-xl`) with no background, border, or outline
+- [x] Verify changes locally in browser
+- [x] Commit and push updated files to GitHub

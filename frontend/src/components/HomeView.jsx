@@ -197,7 +197,7 @@ const HomeView = ({
     <div className={`flex-1 ${isCustomizeOpen ? 'overflow-hidden' : 'overflow-y-auto'} ${homeBgColor} transition-colors duration-500 px-8 py-8 space-y-8 select-none relative`}>
       
       {/* 1. Header Greeting Banner */}
-      <div className={`flex flex-col md:flex-row md:items-center justify-between pb-6 border-b ${isDarkBg ? 'border-white/20' : 'border-[#e2e2e2]'} relative pr-12 md:pr-0`}>
+      <div className={`flex flex-col md:flex-row md:items-center justify-between pb-6 border-b ${isDarkBg ? 'border-white/20' : 'border-[#e2e2e2]'}`}>
         <div>
           <span className={`text-xs font-semibold ${dateTextColorClass} uppercase tracking-wider`}>
             {formattedDate}
@@ -210,7 +210,7 @@ const HomeView = ({
           </p>
         </div>
 
-        <div className="flex items-center gap-4 mt-4 md:mt-0 flex-wrap">
+        <div className="flex items-center gap-3 mt-4 md:mt-0 flex-wrap">
           {effectiveUser?.role === 'Admin' && (
             <>
               {/* New Project Action */}
@@ -243,29 +243,19 @@ const HomeView = ({
             </>
           )}
 
-          {/* Clock (Larger, borderless) */}
-          <div 
-            className={`flex items-center gap-1.5 select-none ${
-              isDarkBg ? 'text-white/90' : 'text-slate-700'
+          {/* Customize Button (Aligned) */}
+          <button 
+            onClick={() => setIsCustomizeOpen(true)}
+            className={`flex items-center gap-2 px-4 py-2 border rounded-md shadow-sm font-semibold text-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 active:scale-95 ${
+              isDarkBg 
+              ? 'bg-white/10 hover:bg-white/20 text-white border-white/20 hover:border-white/30 backdrop-blur-sm' 
+              : 'bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 border-slate-200 hover:border-slate-300'
             }`}
           >
-            <Clock className="h-4.5 w-4.5 text-current opacity-80" />
-            <span className="text-base font-bold font-mono tracking-tight">{formattedTime}</span>
-          </div>
+            <SlidersHorizontal className="h-4 w-4 text-current" />
+            <span>Customize</span>
+          </button>
         </div>
-
-        {/* Customize Button (Square, Cornered) */}
-        <button 
-          onClick={() => setIsCustomizeOpen(true)}
-          className={`absolute top-0 right-0 w-8 h-8 rounded-md transition-all duration-200 hover:scale-105 active:scale-95 border flex items-center justify-center ${
-            isDarkBg 
-            ? 'bg-white/10 hover:bg-white/20 text-white border-white/15 hover:border-white/25 backdrop-blur-sm' 
-            : 'bg-white text-slate-500 hover:text-slate-800 hover:bg-slate-50 border-slate-200 hover:border-slate-300'
-          }`}
-          title="Customize dashboard layout"
-        >
-          <SlidersHorizontal className="h-4 w-4 text-current" />
-        </button>
       </div>
 
       {/* 2. Primary Layout Grid */}
