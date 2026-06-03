@@ -9,5 +9,12 @@
   - [x] Align buttons cleanly and ensure responsive wrapping
 - [x] Local Verification:
   - [x] Run application servers locally and verify layout behavior on light/dark themes
-- [/] Code Commit:
-  - [ ] Stage and commit changes to git, then push to GitHub repository
+- [x] Code Commit:
+  - [x] Stage and commit changes to git, then push to GitHub repository
+
+## Iteration 2: Header Refinement
+- [/] Refactor Customize and Clock styling:
+  - [ ] Transform **Customize** button into a small square icon-only button placed in the corner of the header banner
+  - [ ] Update **Clock** to be larger (`text-lg` / `text-xl`) with no background, border, or outline
+- [ ] Verify changes locally in browser
+- [ ] Commit and push updated files to GitHub
