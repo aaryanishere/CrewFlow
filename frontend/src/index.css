@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans bg-[#f9f9f9] text-[#1a1c1c] antialiased;
+  }
+}
+
+/* Premium Minimalist Grayscale Styles */
+.glass {
+  background: #ffffff;
+  border: 1px solid #e2e2e2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.glass-card {
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.glass-input {
+  background: #ffffff;
+  border: 1px solid #c6c6c6;
+  color: #1a1c1c;
+  transition: all 0.2s ease-in-out;
+}
+
+.glass-input:focus {
+  border-color: #000000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+  background: #ffffff;
+  outline: none;
+}
+
+/* Scrollbars - Premium Grayscale */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c6c6c6;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #777777;
+}
+
+/* Collapsible and Layout Transitions */
+.view-transition {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Table Headings & Columns */
+.mono-table-header {
+  @apply text-xs font-semibold text-[#5e5e5e] uppercase tracking-wider py-2.5 px-4 text-left border-b border-[#e2e2e2] bg-[#f9f9f9];
+}
+
+.mono-table-cell {
+  @apply py-3 px-4 text-sm text-[#1a1c1c] border-b border-[#eeeeee] align-middle;
+}
+
+/* Premium buttons and indicators */
+.btn-black {
+  @apply bg-[#000000] text-[#ffffff] hover:bg-[#222222] active:bg-[#000000] px-4 py-2 text-sm font-medium rounded transition-all duration-150 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.btn-white {
+  @apply bg-[#ffffff] border border-[#c6c6c6] text-[#1a1c1c] hover:bg-[#f3f3f4] active:bg-[#ffffff] px-4 py-2 text-sm font-medium rounded transition-all duration-150 disabled:opacity-50;
+}
