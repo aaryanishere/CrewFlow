@@ -396,9 +396,7 @@ const StrategyGoalsView = ({ projects = [], setActiveView, setActiveProjectId })
 
   // Available Seed Users for selects
   const seedUsers = [
-    { email: 'guest@crewflow.com', name: 'Aaryan Ranjan', initials: 'AR', color: 'bg-purple-100 text-purple-700' },
-    { email: 'member@crewflow.com', name: 'Sneha Sharma', initials: 'SS', color: 'bg-pink-100 text-pink-700' },
-    { email: 'admin@crewflow.com', name: 'Kabir Dev', initials: 'KD', color: 'bg-emerald-100 text-emerald-700' }
+    { email: 'guest@crewflow.com', name: 'Aaryan Ranjan', initials: 'AR', color: 'bg-purple-100 text-purple-700' }
   ];
 
   // Accounts list

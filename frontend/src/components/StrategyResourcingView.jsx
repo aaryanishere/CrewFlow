@@ -91,30 +91,6 @@ const StrategyResourcingView = ({ projects = [], tasks = [] }) => {
         'Product Launch': 25,
         'Monochrome Overhaul': 10
       }
-    },
-    {
-      _id: 'alloc_2',
-      member: 'Sneha Sharma',
-      email: 'member@crewflow.com',
-      role: 'UI Designer',
-      team: 'Design',
-      maxHours: 35,
-      allocatedHours: {
-        'Product Launch': 15,
-        'Monochrome Overhaul': 24 // Over-allocated!
-      }
-    },
-    {
-      _id: 'alloc_3',
-      member: 'Kabir Dev',
-      email: 'admin@crewflow.com',
-      role: 'Marketing Manager',
-      team: 'Marketing',
-      maxHours: 40,
-      allocatedHours: {
-        'Product Launch': 18,
-        'Monochrome Overhaul': 5
-      }
     }
   ]);
 

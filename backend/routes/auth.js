@@ -77,27 +77,8 @@ router.post('/mock-login', async (req, res) => {
     // Try finding user in database
     let user = await User.findOne({ email });
     
-    // Auto-seed demo accounts on a fresh database
-    if (!user && (email === 'admin@crewflow.com' || email === 'member@crewflow.com')) {
-      user = await User.create({
-        firebaseUid: `mock_uid_${email.replace(/[@.]/g, '_')}`,
-        email,
-        role: email === 'admin@crewflow.com' ? 'Admin' : 'Member',
-        mockPassword: 'password123'
-      });
-    }
-
     if (!user) {
       return res.status(401).json({ message: 'User does not exist. Please create an account.' });
-    }
-
-    // Auto-correct legacy demo accounts if they got saved with the wrong role
-    if (email === 'admin@crewflow.com' && user.role !== 'Admin') {
-      user.role = 'Admin';
-      await user.save();
-    } else if (email === 'member@crewflow.com' && user.role !== 'Member') {
-      user.role = 'Member';
-      await user.save();
     }
 
     const storedPassword = user.mockPassword || 'password123';

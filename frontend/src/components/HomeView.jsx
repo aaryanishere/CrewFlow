@@ -243,17 +243,17 @@ const HomeView = ({
             </>
           )}
 
-          {/* Customize Button (Aligned) */}
+          {/* Customize Button (Logo only, square, aligned) */}
           <button 
             onClick={() => setIsCustomizeOpen(true)}
-            className={`flex items-center gap-2 px-4 py-2 border rounded-md shadow-sm font-semibold text-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 active:scale-95 ${
+            className={`w-9 h-9 border rounded-md shadow-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 active:scale-95 flex items-center justify-center ${
               isDarkBg 
               ? 'bg-white/10 hover:bg-white/20 text-white border-white/20 hover:border-white/30 backdrop-blur-sm' 
               : 'bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 border-slate-200 hover:border-slate-300'
             }`}
+            title="Customize dashboard layout"
           >
             <SlidersHorizontal className="h-4 w-4 text-current" />
-            <span>Customize</span>
           </button>
         </div>
       </div>
